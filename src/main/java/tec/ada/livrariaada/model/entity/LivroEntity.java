@@ -18,9 +18,13 @@ public class  LivroEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    //chave estrangeira, buscando a classe inteira, e ñ vinculando só pelo id;
+    //'EAGER' -> toda vez que pego a categoria já qro q venha com os produtos, só é bom colocar ele se uma entidade tiver que andar junta com a outra, caso contrario deixe sem;
+    @ManyToOne(fetch = FetchType.EAGER)//tem duas formas de pegar as inf. usandao 'fetch' 'FetchType.EAGER' por default ele é LAZY;
     @JoinColumn(name="editora",nullable=false)//esse é o nome que vai para a DB;
     private EditoraEntity editora;//P/ esse relacionamento eu não estou pegando o id, e sim a classe inteira;ç
+
+    //chave estrangeira, buscando a classe inteira, e ñ vinculando só pelo id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="categoria",nullable=false)
     private CategoriaEntity categoria;
@@ -33,5 +37,7 @@ public class  LivroEntity {
     private LocalDateTime dataUltimaAtualizacao;
 
     @Column(name="isdn",nullable=false,unique=true)
-    private String isdn;
+    private Long isdn;
+
+
 }

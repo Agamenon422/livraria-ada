@@ -15,15 +15,16 @@ public class EditoraEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy = "editora")
+    @OneToMany(mappedBy = "editora")//o 'mappedBy' diz assim: qual na minha outra entidade que tem essa relação, nesse caso é a 'editora';
     private List<LivroEntity> livros;
 
-    @OneToMany(mappedBy = "editora")
-    private List<CategoriaEntity> categorias;
 
     @Column(name="nome",nullable=false,unique=true)
     private String nome;
 
     @Column(name="descricao")
     private String descricao;
+
+    @Column(name="ativo")
+    private Boolean ativo;
 }

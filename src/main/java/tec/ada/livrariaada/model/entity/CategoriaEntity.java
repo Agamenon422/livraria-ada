@@ -18,13 +18,16 @@ public class CategoriaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)//incrementa de forma automática;
     private Integer id;
 
-    @ManyToOne()
-    @JoinColumn(name ="editora", nullable = false)
-    private EditoraEntity editora;
+
+    @OneToMany(mappedBy = "categoria")//o 'mappedBy' diz assim: qual na minha outra entidade que tem essa relação, nesse caso é a 'editora';
+    private List<LivroEntity> livros;
 
     @Column(name="nome",nullable=false,unique=true)
     private String nome;
 
     @Column(name="descricao")
     private String descricao;
+
+    @Column(name="ativo")
+    private Boolean ativo;//deleção lógica;
 }

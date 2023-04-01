@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import tec.ada.livrariaada.model.dto.LivroDTO;
 import tec.ada.livrariaada.model.entity.CategoriaEntity;
+import tec.ada.livrariaada.model.entity.EditoraEntity;
 import tec.ada.livrariaada.model.entity.LivroEntity;
 import tec.ada.livrariaada.model.mapper.LivroMapper;
 import tec.ada.livrariaada.model.repository.LivroRepository;
@@ -25,6 +26,28 @@ public class LivroService {
     public List<LivroDTO> listar() {
         List<LivroEntity> listaEntities = repository.findAll();
         return mapper.updateListDTO(listaEntities);
+    }
+
+    public List<LivroDTO> filtrar(Integer categoria) {
+        List<LivroEntity> listaEntities = repository.findByCategoria(categoria);
+        return mapper.updateListDTO(listaEntities);
+    }
+
+    public List<LivroDTO> listarPorCategoria(Integer idCategoria){
+        CategoriaEntity categoria= new CategoriaEntity();
+        categoria.setId(idCategoria);
+
+        List <LivroEntity> listaEntities = repository.findByCategoria(categoria);
+        return mapper.updateListDTO(listaEntities);
+    }
+
+    public List<LivroDTO> listarPorEditora(Integer idEditora){
+        EditoraEntity editora = new EditoraEntity();
+        editora.setId(idEditora);
+
+        List <LivroEntity> listaEntities = repository.findByEditora(editora);
+        return mapper.updateListDTO(listaEntities);
+
     }
 
     public LivroDTO pegarPorId(Integer id) {
