@@ -3,8 +3,11 @@ package tec.ada.livrariaada.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
+
 
 @Data
 @Entity
@@ -13,11 +16,7 @@ import java.util.List;
 public class EditoraEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @OneToMany(mappedBy = "editora")//o 'mappedBy' diz assim: qual na minha outra entidade que tem essa relação, nesse caso é a 'editora';
-    private List<LivroEntity> livros;
-
+    private Long id;
 
     @Column(name="nome",nullable=false,unique=true)
     private String nome;
@@ -25,6 +24,7 @@ public class EditoraEntity {
     @Column(name="descricao")
     private String descricao;
 
-    @Column(name="ativo")
-    private Boolean ativo;
+    @OneToMany(mappedBy = "editora", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    private List<LivroEntity> livros;
 }

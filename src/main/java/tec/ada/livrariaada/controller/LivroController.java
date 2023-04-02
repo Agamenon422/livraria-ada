@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tec.ada.livrariaada.model.dto.LivroDTO;
 import tec.ada.livrariaada.model.dto.MensagemDTO;
+import tec.ada.livrariaada.model.entity.LivroEntity;
 import tec.ada.livrariaada.service.LivroService;
 
 import javax.lang.model.type.IntersectionType;
@@ -21,33 +22,6 @@ public class LivroController {
     /*Controla as entradas e saidas dos dados, não é para ter a lógica de négocio;*/
     @Autowired
     private LivroService livroService;
-
-    @GetMapping("/categoria/{idCategoria}")
-    public ResponseEntity<Object>PegarPorCategoria(@PathVariable Integer idCategoria){
-        try {
-            return ResponseEntity.ok(livroService.listarPorCategoria(idCategoria));
-        }
-        catch (Exception ex){
-            log.error(ex.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MensagemDTO(ex.getMessage()));
-        }
-    }
-
-    @GetMapping("/categoria/{idEditora}")
-    public ResponseEntity<Object>PegarPorEditora(@PathVariable Integer idEditora){
-        try {
-            return ResponseEntity.ok(livroService.listarPorEditora(idEditora));
-        }
-        catch (Exception ex){
-            log.error(ex.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new MensagemDTO(ex.getMessage()));
-        }
-
-    }
 
     @GetMapping
     public ResponseEntity<Object> listar(){
@@ -62,43 +36,47 @@ public class LivroController {
         }
     }
 
-
-    @PostMapping
-    public ResponseEntity<Object> criar(
-                                    @RequestBody
-                                    @Valid LivroDTO livroDTO){
-
+    @GetMapping("/porCategoria/{idCategoria}")
+    public ResponseEntity<Object> buscarPorCategoria(@PathVariable Integer idCategoria){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED)//O status 201 é utilizado para indicar que a requisição foi bem sucedida e um novo recurso foi criado no servidor, é utilizada em controller;
-                    .body(livroService.criar(livroDTO));
+            return  ResponseEntity.ok(livroService.listarPorCategoria(idCategoria));
         }
         catch (Exception ex){
             log.error(ex.getMessage());
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.BAD_REQUEST)//retrornar erro 400, pode ser q/ foi esquecido de passar um como parâmetros faltantes ou incorretos;
                     .body(new MensagemDTO(ex.getMessage()));
         }
     }
 
-
-    @PutMapping("{id}")
-    public ResponseEntity<Object> editar(
-            @RequestBody
-            @Valid LivroDTO livroDTO,
-            @PathVariable("id") Integer id){
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(livroService.editar(livroDTO, id));
-        } catch (Exception ex) {
+    @GetMapping("/porEditora/{idEditora}")
+    public ResponseEntity<Object> buscarPorEditora(@PathVariable Integer idEditora){
+        try{
+            return  ResponseEntity.ok(livroService.listarPorEditora(idEditora));
+        }
+        catch (Exception ex){
             log.error(ex.getMessage());
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.BAD_REQUEST)//retrornar erro 400, pode ser q/ foi esquecido de passar um como parâmetros faltantes ou incorretos;
+                    .body(new MensagemDTO(ex.getMessage()));
+        }
+    }
+
+    @GetMapping("/porNomeOuIsbn/{nome}/{isbn}")
+    public ResponseEntity<Object> buscarPorEditora(@PathVariable String nome, @PathVariable String isbn){
+        try{
+            return  ResponseEntity.ok(livroService.listarPorNomeOuIsbn(nome, isbn));
+        }
+        catch (Exception ex){
+            log.error(ex.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)//retrornar erro 400, pode ser q/ foi esquecido de passar um como parâmetros faltantes ou incorretos;
                     .body(new MensagemDTO(ex.getMessage()));
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Object> pegarUm(@PathVariable("id")Integer id){
+    public ResponseEntity<Object> pegarUm(@PathVariable("id")Long id){
         try{
             return  ResponseEntity.ok(livroService.pegarPorId(id));
         }
@@ -117,10 +95,41 @@ public class LivroController {
         }
     }
 
+    @PostMapping
+    public ResponseEntity<Object> criar(
+            @RequestBody
+            @Valid LivroEntity livroEntity){
 
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED)//O status 201 é utilizado para indicar que a requisição foi bem sucedida e um novo recurso foi criado no servidor, é utilizada em controller;
+                    .body(livroService.criar(livroEntity));
+        }
+        catch (Exception ex){
+            log.error(ex.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MensagemDTO(ex.getMessage()));
+        }
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Object> editar(
+                                    @RequestBody
+                                    @Valid LivroDTO livroDTO,
+                                    @PathVariable("id") Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(livroService.editar(livroDTO, id));
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new MensagemDTO(ex.getMessage()));
+        }
+    }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> deletar(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> deletar(@PathVariable("id") Long id){
         try {
             livroService.deletar(id);
             return ResponseEntity

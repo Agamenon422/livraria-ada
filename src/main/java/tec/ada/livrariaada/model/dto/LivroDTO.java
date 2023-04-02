@@ -10,15 +10,16 @@ public class LivroDTO {
 /*Em geral, uma classe DTO deve conter apenas atributos e métodos que se relacionem diretamente
 com os dados que ela representa. Ela não deve conter lógica de negócio ou realizar operações complexas.
 Os dados dentro da classe DTO devem ser acessados por meio de métodos getters e setters.*/
-    private Integer id;
+    private Long id;
 
-    private EditoraDTO editora;
-    private CategoriaDTO categoria;
+    private String editora;
+    private String categoria;
 
     @Size(message = "Nome acima do permitido!")
     @NotBlank(message = "Nome deve conter alum valor")
     private String nome;
-    @Size(min = 13, max = 13,message="Tamanho do isdn ácima do permitido!")
+    @Size(max = 13,message="Tamanho do isdn ácima do permitido!")
     @NotBlank(message="Isbn deve conter um valor de 13 dígitos!")
-    private Long isdn;
+    private String isdn;
+
 }

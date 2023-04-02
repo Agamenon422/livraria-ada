@@ -7,7 +7,7 @@ import lombok.Data;
 @Data//anotação do lombok;
 public class CategoriaDTO {
 
-    private Integer id;
+    private Long id;
     @Size(max=80,message="Tamanho do nome ácima do permitido")
     @NotBlank(message="Nome deve conter algum valor")
     /*P/ q/ essas validações de cima funcionem eu tenho que suar o '@Valid' no método criar na 'CategoriaController';*/

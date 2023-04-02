@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EditoraDBMemoria {
     private List<EditoraDTO> lista = new ArrayList<>();
-    private Integer contador = 1;
+    private Long contador = 1L;
 
     public EditoraDTO pegarUma(Integer id){
         Integer indece = null;
@@ -29,7 +29,7 @@ public class EditoraDBMemoria {
         return editoraDTO;
     }
 
-    public EditoraDTO editar(EditoraDTO editoraDTO, Integer id){
+    public EditoraDTO editar(EditoraDTO editoraDTO, Long id){
         editoraDTO.setId(id);
 
         Integer indice = null;

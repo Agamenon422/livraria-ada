@@ -28,29 +28,7 @@ public class LivroService {
         return mapper.updateListDTO(listaEntities);
     }
 
-    public List<LivroDTO> filtrar(Integer categoria) {
-        List<LivroEntity> listaEntities = repository.findByCategoria(categoria);
-        return mapper.updateListDTO(listaEntities);
-    }
-
-    public List<LivroDTO> listarPorCategoria(Integer idCategoria){
-        CategoriaEntity categoria= new CategoriaEntity();
-        categoria.setId(idCategoria);
-
-        List <LivroEntity> listaEntities = repository.findByCategoria(categoria);
-        return mapper.updateListDTO(listaEntities);
-    }
-
-    public List<LivroDTO> listarPorEditora(Integer idEditora){
-        EditoraEntity editora = new EditoraEntity();
-        editora.setId(idEditora);
-
-        List <LivroEntity> listaEntities = repository.findByEditora(editora);
-        return mapper.updateListDTO(listaEntities);
-
-    }
-
-    public LivroDTO pegarPorId(Integer id) {
+    public LivroDTO pegarPorId(Long id) {
         Optional<LivroEntity> livroEntityOp = repository.findById(id);
 
         if (livroEntityOp.isPresent()){
@@ -60,15 +38,22 @@ public class LivroService {
         throw new EntityNotFoundException("Livro não encontrado");
     }
 
-    public LivroDTO criar(LivroDTO livroDTO) {
-        LivroEntity livro= mapper.update(livroDTO);
-        livro = repository.save(livro);
-        return mapper.update(livro);
+    public LivroDTO criar(LivroEntity livroEntity) {
+
+        Optional<LivroEntity> optional = repository.findByNomeOrIsbn(livroEntity.getNome(), livroEntity.getIsbn());
+
+        if (optional.isEmpty()) {
+            // saveAndFlush serve para salvar e forçar o retorno do ojeto criado
+            LivroEntity livro = repository.saveAndFlush(livroEntity);
+            return mapper.update(livro);
+        } else {
+            throw new RuntimeException("Já existe um livro com o nome ou isbn informado!");
+        }
+
     }
 
-    public LivroDTO editar(LivroDTO livroDTO, Integer id) {
+    public LivroDTO editar(LivroDTO livroDTO, Long id) {
         if (repository.existsById(id)){
-
             LivroEntity livroEntity = mapper.update(livroDTO);
             livroEntity.setId(id);//para que eu tenha a garantia que p id está correto;
             livroEntity = repository.save(livroEntity);
@@ -77,7 +62,7 @@ public class LivroService {
         throw new EntityNotFoundException("Livro não encontrado!");
     }
 
-    public void deletar(Integer id) {
+    public void deletar(Long id) {
         Optional<LivroEntity> livroEntityDeleteOp = repository.findById(id);
 
         if (livroEntityDeleteOp.isPresent()) {
@@ -87,4 +72,24 @@ public class LivroService {
         }
         throw new EntityNotFoundException("Livro não encontrado!");
     }
+
+    public List<LivroDTO> listarPorCategoria(Integer idCategoria){
+        CategoriaEntity categoria = new CategoriaEntity();
+        categoria.setId(idCategoria.longValue());
+        List <LivroEntity> listaEntities = repository.findByCategoria(categoria);
+        return mapper.updateListDTO(listaEntities);
+    }
+
+    public List<LivroDTO> listarPorEditora(Integer idEditora){
+        EditoraEntity editora = new EditoraEntity();
+        editora.setId(idEditora.longValue());
+        List <LivroEntity> listaEntities = repository.findByEditora(editora);
+        return mapper.updateListDTO(listaEntities);
+    }
+
+    public List<LivroDTO> listarPorNomeOuIsbn(String nome, String isbn){
+        List<LivroEntity> listaEntities = repository.buscarPorNomeOuIsbn(nome, isbn);
+        return mapper.updateListDTO(listaEntities);
+    }
+
 }

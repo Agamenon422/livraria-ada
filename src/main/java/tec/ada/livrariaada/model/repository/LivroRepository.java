@@ -1,26 +1,27 @@
 package tec.ada.livrariaada.model.repository;
 
+import lombok.extern.java.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tec.ada.livrariaada.model.entity.CategoriaEntity;
 import tec.ada.livrariaada.model.entity.EditoraEntity;
 import tec.ada.livrariaada.model.entity.LivroEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LivroRepository
-        extends JpaRepository<LivroEntity, Integer> {
+        extends JpaRepository<LivroEntity, Long> {
 
-    //SELECT * FROM produto WHERE nome = 'Arroz' OR (preco BETWEEN 2 AND 10);
-    //Query Method
-   // @Query("SELECT l FROM LivroEntity  l")//forma 'jpql', como vou deixar só o l então ele vai trazer toda a entidade;
-    List<LivroEntity> findByCategoria(CategoriaEntity categoria);
+    public Optional<LivroEntity> findByNomeOrIsbn(String nome, String isbn); // utilizado na hora da criação do livro
 
-    //@Query("SELECT l FROM LivroEntity  l")//forma 'jpql', como vou deixar só o l então ele vai trazer toda a entidade;
-    List<LivroEntity> findByEditora(EditoraEntity editora);
-    @Query("SELECT l FROM LivroEntity l" + " WHERE UPPER(l.nome) LIKE CONCAT('%', UPPER(:nome),'%' ) OR " + "(l.isbn) = :isbn")
-    List<LivroEntity> findByNomeOrIsbn(@Param("nome") String nome, long isbn);
+    @Query("SELECT l FROM LivroEntity l WHERE upper(l.nome) LIKE upper(concat('%', :nome, '%')) OR l.isbn = :isbn")
+    public List<LivroEntity> buscarPorNomeOuIsbn(String nome, String isbn); // utilizado na busca
+
+    public List<LivroEntity> findByCategoria(CategoriaEntity categoria);
+
+    public List<LivroEntity> findByEditora(EditoraEntity editora);
+
 }

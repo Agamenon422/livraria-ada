@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CategoriaDBMemoria {
     private List<CategoriaDTO> lista = new ArrayList<>();
-    private Integer contador = 1;
+    private Long contador = 1L;
 
 
     public CategoriaDTO pegarUma(Integer id) {
@@ -29,7 +29,7 @@ public class CategoriaDBMemoria {
         return categoriaDTO;
     }
 
-    public CategoriaDTO editar(CategoriaDTO categoriaDTO, Integer id) {
+    public CategoriaDTO editar(CategoriaDTO categoriaDTO, Long id) {
         categoriaDTO.setId(id);
 
         Integer indice = null;

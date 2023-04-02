@@ -28,7 +28,7 @@ public class EditoraService {
     }
 
 
-    public EditoraDTO pegarPorId(Integer id) {
+    public EditoraDTO pegarPorId(Long id) {
         Optional<EditoraEntity> editoraEntityOp = repository.findById(id);
 
         if (editoraEntityOp.isPresent()){
@@ -39,14 +39,20 @@ public class EditoraService {
     }
 
 
-    public EditoraDTO criar(EditoraDTO editoraDTO) {
-        EditoraEntity editora = mapper.update(editoraDTO); 
-        editora = repository.save(editora);
-        return mapper.update(editora);
+    public EditoraDTO criar(EditoraEntity editoraEntity) {
+
+        Optional<EditoraEntity> optional = repository.findByNome(editoraEntity.getNome());
+
+        if (optional.isEmpty()) {
+            EditoraEntity editora = repository.save(editoraEntity);
+            return mapper.update(editora);
+        } else {
+            throw new RuntimeException("Já existe editora com esse nome!");
+        }
+
     }
 
-
-    public EditoraDTO editar(EditoraDTO editoraDTO, Integer id) {
+    public EditoraDTO editar(EditoraDTO editoraDTO, Long id) {
         if (repository.existsById(id)){
 
             EditoraEntity editoraEntity = mapper.update(editoraDTO);
@@ -58,7 +64,7 @@ public class EditoraService {
     }
 
 
-    public void deletar(Integer id) {
+    public void deletar(Long id) {
         Optional<EditoraEntity> editoraEntityDeletar = repository.findById(id);
 
         if (editoraEntityDeletar.isPresent()){

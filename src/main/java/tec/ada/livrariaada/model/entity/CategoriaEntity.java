@@ -5,6 +5,8 @@ package tec.ada.livrariaada.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 
@@ -16,11 +18,7 @@ public class CategoriaEntity {
 
     @Id//identifica (como chave primária) o id da entidade;
     @GeneratedValue(strategy = GenerationType.IDENTITY)//incrementa de forma automática;
-    private Integer id;
-
-
-    @OneToMany(mappedBy = "categoria")//o 'mappedBy' diz assim: qual na minha outra entidade que tem essa relação, nesse caso é a 'editora';
-    private List<LivroEntity> livros;
+    private Long id;
 
     @Column(name="nome",nullable=false,unique=true)
     private String nome;
@@ -28,6 +26,8 @@ public class CategoriaEntity {
     @Column(name="descricao")
     private String descricao;
 
-    @Column(name="ativo")
-    private Boolean ativo;//deleção lógica;
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    private List<LivroEntity> livros;
+
 }

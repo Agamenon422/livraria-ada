@@ -20,7 +20,7 @@ public class LivroDBMemoria {
         return lista.get(indice);
     }
 
-    public LivroDTO editar(LivroDTO livroDTO, Integer id){
+    public LivroDTO editar(LivroDTO livroDTO, Long id){
         livroDTO.setId(id);
 
         Integer indice = null;
@@ -46,7 +46,7 @@ public class LivroDBMemoria {
         return livroDTO;
     }
 
-    public void deletar(Integer id){
+    public void deletar(Long id){
         int indice = -1;
         for (Integer i = 0; i < lista.size(); i++) {
             if (lista.get(i).getId().equals(id)) {

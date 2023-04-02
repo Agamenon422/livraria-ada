@@ -29,7 +29,7 @@ public class CategoriaService {
     }
 
 
-    public CategoriaDTO pegarPorId(Integer id) {// Este método recupera um objeto CategoriaDTO pelo seu ID de um repositório de dados
+    public CategoriaDTO pegarPorId(Long id) {// Este método recupera um objeto CategoriaDTO pelo seu ID de um repositório de dados
         // Recupera o objeto CategoriaEntity do repositório, caso exista;
         Optional<CategoriaEntity> categoriaEntityOp = repository.findById(id);//o findById(nativo) q já vem dentro 'JpaRepository' ele vem um optional<>, pq ele pode ou n encontrar a categoria;
         //Verifica se o objeto CategoriaEntity está presente
@@ -42,18 +42,22 @@ public class CategoriaService {
         throw new EntityNotFoundException("Categoria não encontrada!");//essa msn é chamanda ma MensagemDTO na controller;
     }
 
+    public CategoriaDTO criar(CategoriaEntity categoriaEntity) {
 
-    public CategoriaDTO criar(CategoriaDTO categoriaDTO) {
-        // Converte o DTO em uma entidade para persistir no banco de dados
-        CategoriaEntity categoria = mapper.update(categoriaDTO);
-        // Salva a entidade no banco de dados
-        categoria = repository.save(categoria);
-        // Converte a entidade persistida em um DTO para retornar na resposta
-        return mapper.update(categoria);
+        Optional<CategoriaEntity> optional = repository.findByNome(categoriaEntity.getNome());
+
+        if (optional.isEmpty()) {
+            CategoriaEntity categoria = repository.save(categoriaEntity);
+            // Converte a entidade persistida em um DTO para retornar na resposta
+            return mapper.update(categoria);
+        } else {
+            throw new RuntimeException("Já existe categoria com esse nome!");
+        }
+
     }
 
 
-    public CategoriaDTO editar(CategoriaDTO categoriaDTO, Integer id) {
+    public CategoriaDTO editar(CategoriaDTO categoriaDTO, Long id) {
         if(repository.existsById(id)) {//verifica se existe uma entidade para o id;
 
             CategoriaEntity categoriaEntity = mapper.update(categoriaDTO);
@@ -66,7 +70,7 @@ public class CategoriaService {
     }
 
 
-    public void deletar(Integer id){
+    public void deletar(Long id){
         Optional<CategoriaEntity> categoriaEntityOp =
                 repository.findById(id);
 

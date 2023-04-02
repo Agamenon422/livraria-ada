@@ -1,13 +1,10 @@
 package tec.ada.livrariaada.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,28 +13,25 @@ import java.time.LocalDateTime;
 public class  LivroEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    //chave estrangeira, buscando a classe inteira, e ñ vinculando só pelo id;
-    //'EAGER' -> toda vez que pego a categoria já qro q venha com os produtos, só é bom colocar ele se uma entidade tiver que andar junta com a outra, caso contrario deixe sem;
-    @ManyToOne(fetch = FetchType.EAGER)//tem duas formas de pegar as inf. usandao 'fetch' 'FetchType.EAGER' por default ele é LAZY;
-    @JoinColumn(name="editora",nullable=false)//esse é o nome que vai para a DB;
-    private EditoraEntity editora;//P/ esse relacionamento eu não estou pegando o id, e sim a classe inteira;ç
-
-    //chave estrangeira, buscando a classe inteira, e ñ vinculando só pelo id;
+    @NotNull(message = "{msg.livro_editora_ausente}")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="categoria",nullable=false)
+    @JoinColumn(name="editora_id",nullable=false)//esse é o nome que vai para a DB;
+    private EditoraEntity editora;//P/ esse relacionamento eu não estou pegando o id, e sim a classe inteira;
+
+    @NotNull(message = "{msg.livro_categoria_ausente}")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="categoria_id",nullable=false)
     private CategoriaEntity categoria;
 
+    @NotNull(message = "{msg.livro_nome_ausente}")
     @Column(name="nome",nullable=false,unique=true, length = 150)
     private String nome;
 
-    @UpdateTimestamp//anotação do hibernate;
-    @Column(name="data_ultima_atualizacao",nullable=false)//esse é o nome que vai para a DB;
-    private LocalDateTime dataUltimaAtualizacao;
-
-    @Column(name="isdn",nullable=false,unique=true)
-    private Long isdn;
-
+    @NotNull(message = "{msg.livro_isbn_ausente}")
+    @Column(name="isbn",nullable=false,unique=true)
+    @Size(min = 13, max = 13, message = "o isbn deve ter 13 caracteres")
+    private String isbn;
 
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tec.ada.livrariaada.model.dto.EditoraDTO;
 import tec.ada.livrariaada.model.dto.MensagemDTO;
+import tec.ada.livrariaada.model.entity.EditoraEntity;
 import tec.ada.livrariaada.service.EditoraService;
 
 import java.util.OptionalDouble;
@@ -38,7 +39,7 @@ public class EditoraController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> pegarUm(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> pegarUm(@PathVariable("id") Long id){
         try{
             return ResponseEntity.ok(editoraService.pegarPorId(id));
 
@@ -60,10 +61,10 @@ public class EditoraController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> criar(@RequestBody @Valid EditoraDTO editoraDTO){
+    public ResponseEntity<Object> criar(@RequestBody @Valid EditoraEntity editoraEntity){
         try{
             return ResponseEntity.status(HttpStatus.CREATED)//O status 201 é utilizado para indicar que a requisição foi bem sucedida e um novo recurso foi criado no servidor, é utilizada em controller;
-                    .body(editoraService.criar(editoraDTO));
+                    .body(editoraService.criar(editoraEntity));
         }
         catch (Exception ex){
 
@@ -78,7 +79,7 @@ public class EditoraController {
     public ResponseEntity<Object> editar(
             @RequestBody
             @Valid EditoraDTO editoraDTO,
-            @PathVariable("id") Integer id){
+            @PathVariable("id") Long id){
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -94,7 +95,7 @@ public class EditoraController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletar(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> deletar(@PathVariable("id") Long id){
         try {
             editoraService.deletar(id);
             return ResponseEntity

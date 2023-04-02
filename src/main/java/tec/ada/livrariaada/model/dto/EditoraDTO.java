@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class EditoraDTO {
     //colocar somente os atributos;
-    private Integer id;
+    private Long id;
     @Size(max=100,message="Tamanho do nome ácima do permitido")
     @NotBlank(message="Nome deve conter algum valor")
     private String nome;
