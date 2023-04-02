@@ -3,7 +3,7 @@
 Projeto desenvolvido durante a disciplina de WEB-2 do projeto Santander Coders em parceria com Let's Coder.
 O objetivo do projeto é a criação de uma REST API para um sistema de livraria.
 <br><br>
-## Tecnologias utilizadas:
+<strong> Tecnologias utilizadas: </strong>
 <br><br>
 <ol>
 <li>Banco de dados H2;</li>
